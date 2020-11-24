@@ -4,15 +4,15 @@ jdk: oraclejdk8
 
 env:
   global:
-    - ANDROID_API_LEVEL=29
+    - ANDROID_TARGET=android-29
     - ANDROID_BUILD_TOOLS_VERSION=29.0.3
     - ANDROID_ABI=armeabi-v7a
 
 android:
   components:
-#    - tools
-#    - platform-tools
-#    - tools
+    - tools
+    - platform-tools
+    - tools
     - extra-google-m2repository
     - extra-android-m2repository
     - build-tools-29.0.3
@@ -41,15 +41,22 @@ cache:
 #before_script:
 #  - chmod +x gradlew
 
-before_script:
+#before_script:
   # Create and start emulator
-  - chmod +x gradlew
+#  - chmod +x gradlew
 #  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
 #  - emulator -avd test -no-audio -no-window &
 #  - android-wait-for-emulator
 #  - adb shell input keyevent 82 &
 
+before_script:
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - adb wait-for-device
+  - adb shell input keyevent 82 &
+
 script:
   - ./gradlew clean build
-  - ./gradlew test
+  - ./gradlew test -PdisablePreDex
+  - ./gradlew connectedAndroidTest -PdisablePreDex
 #  - ./gradlew connectedAndroidTest
