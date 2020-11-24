@@ -55,7 +55,7 @@ class ImagePickFragmentTest {
         launchFragmentInHiltContainer<ImagePickFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             imageAdapter.images = listOf(imageURL)
-            mViewModel = fakeViewModel
+            viewModel = fakeViewModel
         }
 
         onView(withId(R.id.rvImages)).perform(
